@@ -9,7 +9,7 @@ namespace IntroAPI.Controllers
     public class CarController : ControllerBase
     {
         private readonly IntroContext _context;
-        
+
         public CarController(IntroContext context)
         {
             _context = context;
@@ -45,24 +45,27 @@ namespace IntroAPI.Controllers
             return StatusCode(201, car);
         }
 
-        //[HttpPut]
-        //[Route("{id}")]
-        //public ActionResult Put(int id, Car car)
-        //{
-        //    var tmpCar = cars.SingleOrDefault(c => c.Id == id);
-        //    if (tmpCar != null) // Der findes en bil
-        //    {
-        //        tmpCar.Brand = car.Brand;
+        [HttpPut]
+        [Route("{id}")]
+        public ActionResult Put(int id, Car car)
+        {
+            var tmpCar = _context.Cars.SingleOrDefault(c => c.Id == id);
+            if (tmpCar != null) // Der findes en bil
+            {
+                tmpCar.Brand = car.Brand;
+                tmpCar.Model = car.Model;
+                tmpCar.Description = car.Description;
+                // Update database med ny bil værdier
+                _context.Update(tmpCar);
+                _context.SaveChanges();
+                return NoContent();
+            }
+            else
+            {
+                return NotFound("No car was found on id: " + id);
+            }
 
-        //        // Update database med ny bil værdier
-        //        return NoContent();
-        //    }
-        //    else
-        //    {
-        //        return NotFound("No car was found on id: " + id);
-        //    }
-
-        //}
+        }
 
         [HttpDelete]
         [Route("{id}")]
